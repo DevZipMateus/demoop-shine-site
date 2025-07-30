@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { MessageCircle } from 'lucide-react';
 
 const WhatsAppButton = () => {
   const whatsappMessage = `Olá! Vim através do site da Demoop e gostaria de mais informações sobre produtos de limpeza.`;
@@ -14,7 +13,11 @@ const WhatsAppButton = () => {
       className="whatsapp-float group"
       aria-label="Entrar em contato via WhatsApp"
     >
-      <MessageCircle className="h-7 w-7 group-hover:scale-110 transition-transform duration-300" />
+      <img 
+        src="/lovable-uploads/c927bf5e-aeb6-40d3-b9ec-6ae4bceda604.png" 
+        alt="WhatsApp"
+        className="h-full w-full object-cover rounded-full group-hover:scale-110 transition-transform duration-300"
+      />
     </a>
   );
 };
