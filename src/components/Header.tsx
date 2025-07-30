@@ -2,11 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,11 +20,29 @@ const Header = () => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
+    // Se estamos na página de produtos, navegar para a home primeiro
+    if (location.pathname === '/produtos') {
+      navigate('/', { replace: true });
+      // Aguardar um pouco para a página carregar e então fazer o scroll
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      // Se já estamos na home, fazer scroll diretamente
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
+    setIsMenuOpen(false);
+  };
+
+  const handleLogoClick = () => {
+    navigate('/');
+    setIsMenuOpen(false);
   };
 
   const menuItems = [
@@ -45,7 +65,7 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 cursor-pointer" onClick={handleLogoClick}>
             <img 
               src="/lovable-uploads/a921157f-49aa-4e04-92cd-d937582e909f.png" 
               alt="Demoop - Excelência em Limpeza"
@@ -61,7 +81,11 @@ const Header = () => {
                 <Link
                   key={item.id}
                   to={item.href}
-                  className="text-gray-700 hover:text-demoop-teal font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md px-2 py-1"
+                  className={`font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md px-2 py-1 ${
+                    location.pathname === item.href 
+                      ? 'text-demoop-teal' 
+                      : 'text-gray-700 hover:text-demoop-teal'
+                  }`}
                   aria-label={`Navegar para página ${item.label}`}
                 >
                   {item.label}
@@ -99,7 +123,11 @@ const Header = () => {
                 <Link
                   key={item.id}
                   to={item.href}
-                  className="block w-full text-left py-3 px-4 text-gray-700 hover:text-demoop-teal hover:bg-demoop-light-teal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md"
+                  className={`block w-full text-left py-3 px-4 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md ${
+                    location.pathname === item.href 
+                      ? 'text-demoop-teal bg-demoop-light-teal' 
+                      : 'text-gray-700 hover:text-demoop-teal hover:bg-demoop-light-teal'
+                  }`}
                   aria-label={`Navegar para página ${item.label}`}
                   onClick={() => setIsMenuOpen(false)}
                 >
