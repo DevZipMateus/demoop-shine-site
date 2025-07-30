@@ -13,7 +13,7 @@ import WhatsAppButton from '@/components/WhatsAppButton';
 const Index = () => {
   useEffect(() => {
     // Set document title and meta tags for SEO
-    document.title = 'Demoop - Produtos de Limpeza e Descartáveis | A limpeza que faz a diferença';
+    document.title = 'Demoop - Produtos de Limpeza e Descartáveis | Morro da Fumaça - SC';
     
     // Update meta description
     const metaDescription = document.querySelector('meta[name="description"]');
