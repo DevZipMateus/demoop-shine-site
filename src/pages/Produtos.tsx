@@ -55,7 +55,7 @@ const Produtos = () => {
     // All images from public/lovable-uploads/galeria - EXCLUDING SPECIFIC IMAGES
     const galleryImages = [
       // "5L - R$27,90  2L - R$12,90  2L - R$12,90.jpeg", // REMOVED
-      "5L - R$27,90  2L - R$12,90 (cópia).jpeg",
+      "5L - R$27,90  2L - R$12,90 .jpeg",
       // "69a48e2b-d0fd-4b71-a842-abe00864f7fd.png", // REMOVED
       // "90d99fc5-2fe3-4a3b-a15c-64bc0c7f8cef.png", // REMOVED
       "R$    13,90.jpeg",
