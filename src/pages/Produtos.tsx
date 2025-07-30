@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -182,58 +183,6 @@ const Produtos = () => {
       "R$8,90.jpeg"
     ];
 
-    const newProductImages = [
-      {
-        filename: "158dde15-63cc-4f68-9eac-35c3229acbd4.png",
-        name: "Limpa Vidros 2 em 1",
-        price: "R$ 29,90",
-        category: "limpadores",
-        description: "Limpa vidros com rodo para secar e refil lavável em máquina. Cabo extensível de 150 cm com ajuste em até 10 posições diferentes."
-      },
-      {
-        filename: "6a39f1c4-7600-4030-8be7-18f24811d04d.png",
-        name: "MOP Spray",
-        price: "R$ 39,90",
-        category: "equipamentos",
-        description: "MOP Spray com base fina e flexível que alcança cantos estreitos. Reservatório acoplado para maior praticidade."
-      },
-      {
-        filename: "4d733bd7-ca62-40f4-a723-1df87156d99b.png",
-        name: "Balde MOP com Centrífuga",
-        price: "R$ 49,90",
-        category: "equipamentos",
-        description: "Balde prático com alça, centrífuga fácil, ideal para pisos frios, sintéticos ou madeira. Remove água em excesso com facilidade."
-      },
-      {
-        filename: "7b968807-c9de-441c-9249-a7e2f474f48a.png",
-        name: "Limpa Vidros Spray",
-        price: "R$ 24,90",
-        category: "limpadores",
-        description: "Spray limpa vidros com esfregão de microfibra lavável em máquina, borrifador para facilitar aplicação e reservatório para produto de limpeza."
-      },
-      {
-        filename: "6442b420-f136-4325-9733-e79e5e7c5006.png",
-        name: "Banqueta Multiuso Retrátil",
-        price: "R$ 34,90",
-        category: "equipamentos",
-        description: "Banqueta multiuso retrátil com superfície antiderrapante. Compacto, prático e resistente para diversas atividades."
-      },
-      {
-        filename: "f171bb0c-6fc2-45d8-a23e-06bdc73cb69d.png",
-        name: "Panos Microfibra - Caixa com 20 Peças",
-        price: "R$ 19,90",
-        category: "limpadores",
-        description: "Caixa com 20 panos de microfibra ideais para qualquer ocasião. Reutilizáveis, laváveis em máquina, não risca e não solta pelos."
-      },
-      {
-        filename: "ee45451b-efd2-409c-b446-47e394cea49a.png",
-        name: "Zip Clean Saponáceo Spray",
-        price: "R$ 16,90",
-        category: "limpadores",
-        description: "Zip Clean Saponáceo MP - O que você precisa para eliminar as sujeiras mais difíceis. Fórmula eficaz para limpeza pesada."
-      }
-    ];
-
     const galleryProducts: Product[] = galleryImages.map((filename, index) => ({
       id: index + 1,
       name: generateProductName(filename),
@@ -243,19 +192,8 @@ const Produtos = () => {
       description: "Produto de limpeza profissional de alta qualidade"
     }));
 
-    const newProducts: Product[] = newProductImages.map((item, index) => ({
-      id: galleryProducts.length + index + 1,
-      name: item.name,
-      price: item.price,
-      image: `/lovable-uploads/${item.filename}`,
-      category: item.category,
-      description: item.description
-    }));
-
-    const allProducts = [...galleryProducts, ...newProducts];
-    
-    setProducts(allProducts);
-    setFilteredProducts(allProducts);
+    setProducts(galleryProducts);
+    setFilteredProducts(galleryProducts);
   }, []);
 
   useEffect(() => {
