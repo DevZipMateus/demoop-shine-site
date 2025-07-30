@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { Search, Filter } from 'lucide-react';
+import Header from '@/components/Header';
 
 const Produtos = () => {
   // Lista de todas as imagens da galeria com seus preços extraídos dos nomes dos arquivos
@@ -143,8 +143,10 @@ const Produtos = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Header />
+      
       {/* Search and Filter Section */}
-      <section className="bg-white border-b">
+      <section className="bg-white border-b mt-20">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row gap-4 items-center">
             {/* Search */}
