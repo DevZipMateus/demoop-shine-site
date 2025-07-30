@@ -57,31 +57,31 @@ const Header = () => {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full ${
         isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-white/90'
       }`}
       role="banner"
     >
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
+      <div className="container-responsive py-3 sm:py-4">
+        <div className="flex items-center justify-between w-full">
           {/* Logo */}
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={handleLogoClick}>
+          <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer flex-shrink-0" onClick={handleLogoClick}>
             <img 
               src="/lovable-uploads/a921157f-49aa-4e04-92cd-d937582e909f.png" 
               alt="Demoop - Excelência em Limpeza"
-              className="h-12 w-auto"
+              className="h-8 sm:h-10 md:h-12 w-auto"
               loading="eager"
             />
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8" role="navigation">
+          <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6" role="navigation">
             {menuItems.map((item) => (
               item.type === 'link' ? (
                 <Link
                   key={item.id}
                   to={item.href}
-                  className={`font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md px-2 py-1 ${
+                  className={`font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md px-2 py-1 text-sm xl:text-base whitespace-nowrap ${
                     location.pathname === item.href 
                       ? 'text-demoop-teal' 
                       : 'text-gray-700 hover:text-demoop-teal'
@@ -94,7 +94,7 @@ const Header = () => {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="text-gray-700 hover:text-demoop-teal font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md px-2 py-1"
+                  className="text-gray-700 hover:text-demoop-teal font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md px-2 py-1 text-sm xl:text-base whitespace-nowrap"
                   aria-label={`Navegar para seção ${item.label}`}
                 >
                   {item.label}
@@ -107,43 +107,45 @@ const Header = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="lg:hidden flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Abrir menu de navegação"
           >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMenuOpen ? <X className="h-4 w-4 sm:h-6 sm:w-6" /> : <Menu className="h-4 w-4 sm:h-6 sm:w-6" />}
           </Button>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="md:hidden mt-4 py-4 border-t border-gray-200" role="navigation">
-            {menuItems.map((item) => (
-              item.type === 'link' ? (
-                <Link
-                  key={item.id}
-                  to={item.href}
-                  className={`block w-full text-left py-3 px-4 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md ${
-                    location.pathname === item.href 
-                      ? 'text-demoop-teal bg-demoop-light-teal' 
-                      : 'text-gray-700 hover:text-demoop-teal hover:bg-demoop-light-teal'
-                  }`}
-                  aria-label={`Navegar para página ${item.label}`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className="block w-full text-left py-3 px-4 text-gray-700 hover:text-demoop-teal hover:bg-demoop-light-teal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md"
-                  aria-label={`Navegar para seção ${item.label}`}
-                >
-                  {item.label}
-                </button>
-              )
-            ))}
+          <nav className="lg:hidden mt-4 py-4 border-t border-gray-200 w-full" role="navigation">
+            <div className="flex flex-col space-y-1">
+              {menuItems.map((item) => (
+                item.type === 'link' ? (
+                  <Link
+                    key={item.id}
+                    to={item.href}
+                    className={`block w-full text-left py-3 px-4 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md text-base ${
+                      location.pathname === item.href 
+                        ? 'text-demoop-teal bg-demoop-light-teal' 
+                        : 'text-gray-700 hover:text-demoop-teal hover:bg-demoop-light-teal'
+                    }`}
+                    aria-label={`Navegar para página ${item.label}`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className="block w-full text-left py-3 px-4 text-gray-700 hover:text-demoop-teal hover:bg-demoop-light-teal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md text-base"
+                    aria-label={`Navegar para seção ${item.label}`}
+                  >
+                    {item.label}
+                  </button>
+                )
+              ))}
+            </div>
           </nav>
         )}
       </div>
