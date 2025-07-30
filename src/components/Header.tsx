@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -57,14 +58,14 @@ const Header = () => {
           <nav className="hidden md:flex items-center space-x-8" role="navigation">
             {menuItems.map((item) => (
               item.type === 'link' ? (
-                <a
+                <Link
                   key={item.id}
-                  href={item.href}
+                  to={item.href}
                   className="text-gray-700 hover:text-demoop-teal font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md px-2 py-1"
                   aria-label={`Navegar para página ${item.label}`}
                 >
                   {item.label}
-                </a>
+                </Link>
               ) : (
                 <button
                   key={item.id}
@@ -95,15 +96,15 @@ const Header = () => {
           <nav className="md:hidden mt-4 py-4 border-t border-gray-200" role="navigation">
             {menuItems.map((item) => (
               item.type === 'link' ? (
-                <a
+                <Link
                   key={item.id}
-                  href={item.href}
+                  to={item.href}
                   className="block w-full text-left py-3 px-4 text-gray-700 hover:text-demoop-teal hover:bg-demoop-light-teal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md"
                   aria-label={`Navegar para página ${item.label}`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}
-                </a>
+                </Link>
               ) : (
                 <button
                   key={item.id}
