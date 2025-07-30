@@ -12,15 +12,10 @@ const Hero = () => {
 
   return (
     <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background with gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-demoop-light-teal via-white to-demoop-light-blue opacity-80"></div>
-      
-      {/* Background image */}
+      {/* Background with solid color */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-        style={{
-          backgroundImage: `url('/lovable-uploads/321cba5f-d169-4032-9e69-b1a5df92b97a.png')`
-        }}
+        className="absolute inset-0"
+        style={{ backgroundColor: '#b3eff9' }}
       ></div>
 
       <div className="relative z-10 container mx-auto px-4 py-20 text-center">
