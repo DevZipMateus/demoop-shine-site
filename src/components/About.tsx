@@ -58,8 +58,8 @@ const About = () => {
               loop
               muted
               playsInline
-              className="rounded-lg shadow-lg w-full h-auto"
-              style={{ maxHeight: '400px', objectFit: 'contain' }}
+              className="rounded-lg shadow-lg w-full h-full"
+              style={{ minHeight: '400px', objectFit: 'cover' }}
             >
               Seu navegador não suporta o elemento de vídeo.
             </video>
