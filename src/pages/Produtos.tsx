@@ -344,11 +344,11 @@ const Produtos = () => {
               {filteredProducts.map((product) => (
                 <Card key={product.id} className="group hover:shadow-lg transition-shadow duration-300">
                   <CardHeader className="p-0">
-                    <div className="relative overflow-hidden rounded-t-lg">
+                    <div className="relative overflow-hidden rounded-t-lg bg-white">
                       <img
                         src={product.image}
                         alt={product.name}
-                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300 p-2"
                         loading="lazy"
                         onError={(e) => {
                           console.log(`Erro ao carregar imagem: ${product.image}`);
