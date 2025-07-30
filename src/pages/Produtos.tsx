@@ -53,8 +53,7 @@ const Produtos = () => {
   useEffect(() => {
     // All images from public/lovable-uploads/galeria
     const galleryImages = [
-      "5L - R$27,90  2L - R$12,90 (cópia).jpeg",
-      "5L - R$27,90  2L - R$12,90.jpeg",
+      "5L - R$27,90  2L - R$12,90  2L - R$12,90.jpeg",
       "69a48e2b-d0fd-4b71-a842-abe00864f7fd.png",
       "90d99fc5-2fe3-4a3b-a15c-64bc0c7f8cef.png",
       "R$    13,90.jpeg",
@@ -182,8 +181,7 @@ const Produtos = () => {
       "R$7,50.png",
       "R$8,50.jpeg",
       "R$8,90 .jpeg",
-      "R$8,90.jpeg",
-      "dabf577d-abec-4c2f-aab4-f1a1c600dc29.png"
+      "R$8,90.jpeg"
     ];
 
     const galleryProducts: Product[] = galleryImages.map((filename, index) => ({
@@ -232,32 +230,6 @@ const Produtos = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link to="/">
-                <Button variant="ghost" size="icon" className="hover:bg-gray-100">
-                  <ArrowLeft className="h-5 w-5" />
-                </Button>
-              </Link>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">Produtos</h1>
-                <p className="text-gray-600 mt-1">Descubra nossa linha completa de produtos de limpeza</p>
-              </div>
-            </div>
-            <Link to="/">
-              <img 
-                src="/lovable-uploads/a921157f-49aa-4e04-92cd-d937582e909f.png" 
-                alt="Demoop Logo"
-                className="h-12 w-auto"
-              />
-            </Link>
-          </div>
-        </div>
-      </header>
-
       {/* Search and Filter Section */}
       <section className="bg-white border-b">
         <div className="container mx-auto px-4 py-6">
@@ -357,37 +329,6 @@ const Produtos = () => {
           </>
         )}
       </main>
-
-      {/* CTA Section */}
-      <section className="bg-demoop-teal py-12">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Não encontrou o que procura?
-          </h2>
-          <p className="text-white/90 text-lg mb-6 max-w-2xl mx-auto">
-            Entre em contato conosco! Temos uma ampla variedade de produtos de limpeza 
-            e podemos ajudar você a encontrar exatamente o que precisa.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="bg-white text-demoop-teal border-white hover:bg-gray-50"
-              onClick={() => window.open('https://wa.me/5548999982838', '_blank')}
-            >
-              WhatsApp
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="bg-white text-demoop-teal border-white hover:bg-gray-50"
-              onClick={() => window.open('tel:+5548999982838', '_blank')}
-            >
-              Ligar Agora
-            </Button>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
