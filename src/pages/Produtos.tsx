@@ -1,8 +1,11 @@
 import React from 'react';
 import { Search, Filter } from 'lucide-react';
 import Header from '@/components/Header';
+import { useScrollToTop } from '@/hooks/useScrollToTop';
 
 const Produtos = () => {
+  useScrollToTop();
+
   // Lista de todas as imagens da galeria com seus preços extraídos dos nomes dos arquivos
   const products = [
     { image: '/lovable-uploads/galeria/5L - R$27,90  2L - R$12,90.jpeg', price: '5L - R$27,90 / 2L - R$12,90' },
