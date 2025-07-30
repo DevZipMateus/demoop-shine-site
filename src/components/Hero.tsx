@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Sparkles, ShoppingCart, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,7 +19,7 @@ const Hero = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1518495973542-4542c06a5843?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3648&q=80')`
+          backgroundImage: `url('/lovable-uploads/321cba5f-d169-4032-9e69-b1a5df92b97a.png')`
         }}
       ></div>
 
