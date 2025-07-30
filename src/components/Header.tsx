@@ -25,12 +25,13 @@ const Header = () => {
   };
 
   const menuItems = [
-    { id: 'inicio', label: 'Início' },
-    { id: 'sobre', label: 'Sobre' },
-    { id: 'servicos', label: 'Serviços' },
-    { id: 'depoimentos', label: 'Depoimentos' },
-    { id: 'localizacao', label: 'Localização' },
-    { id: 'contato', label: 'Contato' }
+    { id: 'inicio', label: 'Início', type: 'scroll' },
+    { id: 'sobre', label: 'Sobre', type: 'scroll' },
+    { id: 'produtos', label: 'Produtos', type: 'link', href: '/produtos' },
+    { id: 'servicos', label: 'Serviços', type: 'scroll' },
+    { id: 'depoimentos', label: 'Depoimentos', type: 'scroll' },
+    { id: 'localizacao', label: 'Localização', type: 'scroll' },
+    { id: 'contato', label: 'Contato', type: 'scroll' }
   ];
 
   return (
@@ -55,14 +56,25 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8" role="navigation">
             {menuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="text-gray-700 hover:text-demoop-teal font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md px-2 py-1"
-                aria-label={`Navegar para seção ${item.label}`}
-              >
-                {item.label}
-              </button>
+              item.type === 'link' ? (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  className="text-gray-700 hover:text-demoop-teal font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md px-2 py-1"
+                  aria-label={`Navegar para página ${item.label}`}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className="text-gray-700 hover:text-demoop-teal font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md px-2 py-1"
+                  aria-label={`Navegar para seção ${item.label}`}
+                >
+                  {item.label}
+                </button>
+              )
             ))}
           </nav>
 
@@ -82,14 +94,26 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="md:hidden mt-4 py-4 border-t border-gray-200" role="navigation">
             {menuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="block w-full text-left py-3 px-4 text-gray-700 hover:text-demoop-teal hover:bg-demoop-light-teal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md"
-                aria-label={`Navegar para seção ${item.label}`}
-              >
-                {item.label}
-              </button>
+              item.type === 'link' ? (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  className="block w-full text-left py-3 px-4 text-gray-700 hover:text-demoop-teal hover:bg-demoop-light-teal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md"
+                  aria-label={`Navegar para página ${item.label}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className="block w-full text-left py-3 px-4 text-gray-700 hover:text-demoop-teal hover:bg-demoop-light-teal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md"
+                  aria-label={`Navegar para seção ${item.label}`}
+                >
+                  {item.label}
+                </button>
+              )
             ))}
           </nav>
         )}
