@@ -1,232 +1,8 @@
 
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Search, Filter } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Link } from 'react-router-dom';
-
-interface Product {
-  id: number;
-  name: string;
-  price: string;
-  image: string;
-  category: string;
-  description?: string;
-}
+import React from 'react';
+import { Search, Filter } from 'lucide-react';
 
 const Produtos = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('todos');
-
-  // Extract price from filename
-  const extractPrice = (filename: string): string => {
-    const priceMatch = filename.match(/R\$\s*[\d,]+(?:\.\d{2})?/);
-    return priceMatch ? priceMatch[0] : 'Consulte';
-  };
-
-  // Generate product name from filename
-  const generateProductName = (filename: string): string => {
-    const nameWithoutExtension = filename.replace(/\.(jpeg|jpg|png)$/i, '');
-    const nameWithoutPrice = nameWithoutExtension.replace(/R\$\s*[\d,]+(?:\.\d{2})?/g, '').trim();
-    
-    if (nameWithoutPrice.length > 0) {
-      return `Produto de Limpeza - ${nameWithoutPrice}`;
-    }
-    
-    return 'Produto de Limpeza Profissional';
-  };
-
-  // Categorize products based on common patterns
-  const categorizeProduct = (filename: string): string => {
-    const name = filename.toLowerCase();
-    if (name.includes('detergente') || name.includes('5l') || name.includes('2l')) return 'detergentes';
-    if (name.includes('desinfetante')) return 'desinfetantes';
-    if (name.includes('sabão') || name.includes('sabao')) return 'saboes';
-    if (name.includes('limpador')) return 'limpadores';
-    if (name.includes('amaciante')) return 'amaciantes';
-    if (name.includes('álcool') || name.includes('alcool') || name.includes('gel')) return 'higiene';
-    if (name.includes('limpa') || name.includes('vidros') || name.includes('spray')) return 'limpadores';
-    if (name.includes('mop') || name.includes('microfibra') || name.includes('banqueta')) return 'equipamentos';
-    return 'limpeza-geral';
-  };
-
-  useEffect(() => {
-    // All images from public/lovable-uploads/galeria - EXCLUDING SPECIFIC IMAGES
-    const galleryImages = [
-      "R$    13,90.jpeg",
-      "R$   13,90 .jpeg",
-      "R$   13,90.jpeg",
-      "R$   15,90.jpeg",
-      "R$  10,50.jpeg",
-      "R$  13,50.jpeg",
-      "R$  13,90    .jpeg",
-      "R$  13,90  .jpeg",
-      "R$  13,90 .jpeg",
-      "R$  13,90.jpeg",
-      "R$  15,90.jpeg",
-      "R$  17,90.jpeg",
-      "R$  19,90.jpeg",
-      "R$  20,90.jpeg",
-      "R$  29,90 .png",
-      "R$  32,90.jpeg",
-      "R$ 10,50 .jpeg",
-      "R$ 10,50.jpeg",
-      "R$ 10,90.jpeg",
-      "R$ 13,50.jpeg",
-      "R$ 13,90    .jpeg",
-      "R$ 13,90   .jpeg",
-      "R$ 13,90  .jpeg",
-      "R$ 13,90 .jpeg",
-      "R$ 13,90.jpeg",
-      "R$ 14,90.jpeg",
-      "R$ 15,90   .jpeg",
-      "R$ 15,90  .jpeg",
-      "R$ 15,90 .jpeg",
-      "R$ 15,90.jpeg",
-      "R$ 16,50.jpeg",
-      "R$ 16,90.jpeg",
-      "R$ 17,90   .jpeg",
-      "R$ 17,90  .jpeg",
-      "R$ 17,90 .jpeg",
-      "R$ 17,90.jpeg",
-      "R$ 19,90 .jpeg",
-      "R$ 19,90.jpeg",
-      "R$ 19,90.png",
-      "R$ 20,90.jpeg",
-      "R$ 21,90.jpeg",
-      "R$ 22,50.jpeg",
-      "R$ 23,90.jpeg",
-      "R$ 24,50.jpeg",
-      "R$ 26,50.jpeg",
-      "R$ 29,90.jpeg",
-      "R$ 3,50.jpeg",
-      "R$ 32,50.jpeg",
-      "R$ 5,90.jpeg",
-      "R$ 6,80.jpeg",
-      "R$ 7,50.jpeg",
-      "R$ 9,90.jpeg",
-      "R$ 9.jpeg",
-      "R$10,50  .jpeg",
-      "R$10,50 .jpeg",
-      "R$10,50.jpeg",
-      "R$10,50.png",
-      "R$10,90 .jpeg",
-      "R$10,90.jpeg",
-      "R$11,90.jpeg",
-      "R$12,90 .jpeg",
-      "R$12,90.jpeg",
-      "R$13,50.jpeg",
-      "R$13,90    .jpeg",
-      "R$13,90   .jpeg",
-      "R$13,90  .jpeg",
-      "R$13,90 .jpeg",
-      "R$13,90.jpeg",
-      "R$14,50.jpeg",
-      "R$14,50.png",
-      "R$14,90  .jpeg",
-      "R$14,90 .jpeg",
-      "R$14,90.jpeg",
-      "R$15,90  .png",
-      "R$15,90 .jpeg",
-      "R$15,90.jpeg",
-      "R$16,50.jpeg",
-      "R$16,90.jpeg",
-      "R$16,90.png",
-      "R$17,50.jpeg",
-      "R$17,50.png",
-      "R$18,90 .jpeg",
-      "R$18,90.jpeg",
-      "R$19,90   .jpeg",
-      "R$19,90  .jpeg",
-      "R$19,90.jpeg",
-      "R$19,90.png",
-      "R$20,90.jpeg",
-      "R$21,90  .jpeg",
-      "R$21,90 .jpeg",
-      "R$21,90.jpeg",
-      "R$22,50  .jpeg",
-      "R$22,50 .jpeg",
-      "R$22,50.jpeg",
-      "R$23,50.jpeg",
-      "R$24,50 .jpeg",
-      "R$24,50.jpeg",
-      "R$25,90.jpeg",
-      "R$26,50.jpeg",
-      "R$26,90.png",
-      "R$27,90 .jpeg",
-      "R$27,90.jpeg",
-      "R$28,50.jpeg",
-      "R$29,90 .jpeg",
-      "R$29,90 .png",
-      "R$29,90.jpeg",
-      "R$3,50.jpeg",
-      "R$3,90.jpeg",
-      "R$32,50 .jpeg",
-      "R$32,50.png",
-      "R$34,90.jpeg",
-      "R$35,0.jpeg",
-      "R$36,90.png",
-      "R$39,90  .jpeg",
-      "R$39,90  .png",
-      "R$39,90 .jpeg",
-      "R$39,90.jpeg",
-      "R$39,90.png",
-      "R$5,90.jpeg",
-      "R$6,80 .jpeg",
-      "R$6,80.jpeg",
-      "R$7,50.jpeg",
-      "R$7,50.png",
-      "R$8,50.jpeg",
-      "R$8,90 .jpeg",
-      "R$8,90.jpeg"
-    ];
-
-    const galleryProducts: Product[] = galleryImages.map((filename, index) => ({
-      id: index + 1,
-      name: generateProductName(filename),
-      price: extractPrice(filename),
-      image: `/lovable-uploads/galeria/${filename}`,
-      category: categorizeProduct(filename),
-      description: "Produto de limpeza profissional de alta qualidade"
-    }));
-
-    setProducts(galleryProducts);
-    setFilteredProducts(galleryProducts);
-  }, []);
-
-  useEffect(() => {
-    let filtered = products;
-
-    if (searchTerm) {
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.price.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    if (selectedCategory !== 'todos') {
-      filtered = filtered.filter(product =>
-        product.category === selectedCategory
-      );
-    }
-
-    setFilteredProducts(filtered);
-  }, [searchTerm, selectedCategory, products]);
-
-  const categories = [
-    { value: 'todos', label: 'Todos os Produtos' },
-    { value: 'detergentes', label: 'Detergentes' },
-    { value: 'desinfetantes', label: 'Desinfetantes' },
-    { value: 'saboes', label: 'Sabões' },
-    { value: 'limpadores', label: 'Limpadores' },
-    { value: 'amaciantes', label: 'Amaciantes' },
-    { value: 'higiene', label: 'Higiene' },
-    { value: 'equipamentos', label: 'Equipamentos' },
-    { value: 'limpeza-geral', label: 'Limpeza Geral' }
-  ];
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Search and Filter Section */}
@@ -239,9 +15,8 @@ const Produtos = () => {
               <input
                 type="text"
                 placeholder="Buscar produtos..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-demoop-teal focus:border-transparent outline-none"
+                disabled
               />
             </div>
 
@@ -249,84 +24,22 @@ const Produtos = () => {
             <div className="flex items-center space-x-2">
               <Filter className="h-4 w-4 text-gray-500" />
               <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-demoop-teal focus:border-transparent outline-none"
+                disabled
               >
-                {categories.map((category) => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
-                  </option>
-                ))}
+                <option>Todos os Produtos</option>
               </select>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Products Grid */}
+      {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {filteredProducts.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">Nenhum produto encontrado com os filtros selecionados.</p>
-          </div>
-        ) : (
-          <>
-            <div className="mb-6">
-              <p className="text-gray-600">
-                Mostrando {filteredProducts.length} de {products.length} produtos
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredProducts.map((product) => (
-                <Card key={product.id} className="group hover:shadow-lg transition-shadow duration-300">
-                  <CardHeader className="p-0">
-                    <div className="relative overflow-hidden rounded-t-lg bg-white">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300 p-2"
-                        loading="lazy"
-                        onError={(e) => {
-                          console.log(`Erro ao carregar imagem: ${product.image}`);
-                          e.currentTarget.src = '/placeholder.svg';
-                        }}
-                      />
-                      <div className="absolute top-3 right-3 bg-demoop-teal text-white px-2 py-1 rounded-full text-sm font-semibold">
-                        {product.price}
-                      </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className="p-4">
-                    <CardTitle className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                      {product.name}
-                    </CardTitle>
-                    {product.description && (
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                        {product.description}
-                      </p>
-                    )}
-                    
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-demoop-teal">
-                        {product.price}
-                      </span>
-                      <Button 
-                        size="sm" 
-                        className="bg-demoop-teal hover:bg-demoop-teal/90"
-                        onClick={() => window.open('https://wa.me/5548999982838?text=Olá! Gostaria de saber mais sobre o produto: ' + product.name, '_blank')}
-                      >
-                        Consultar
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </>
-        )}
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Página de Produtos</h2>
+          <p className="text-gray-500 text-lg">Conteúdo em desenvolvimento</p>
+        </div>
       </main>
     </div>
   );
