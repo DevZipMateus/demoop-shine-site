@@ -20,61 +20,183 @@ const Produtos = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('todos');
 
-  // Mock products data - in a real app, this would come from an API
-  useEffect(() => {
-    const mockProducts: Product[] = [
-      {
-        id: 1,
-        name: "Detergente Multi-uso 5L",
-        price: "R$ 27,90",
-        image: "/lovable-uploads/galeria/5L - R$27,90  2L - R$12,90.jpeg",
-        category: "detergentes",
-        description: "Detergente concentrado para limpeza geral"
-      },
-      {
-        id: 2,
-        name: "Desinfetante Premium",
-        price: "R$ 15,90",
-        image: "/lovable-uploads/galeria/R$ 15,90.jpeg",
-        category: "desinfetantes",
-        description: "Desinfetante com ação bactericida"
-      },
-      {
-        id: 3,
-        name: "Sabão Líquido Concentrado",
-        price: "R$ 19,90",
-        image: "/lovable-uploads/galeria/R$ 19,90.jpeg",
-        category: "saboes",
-        description: "Sabão líquido para roupas delicadas"
-      },
-      {
-        id: 4,
-        name: "Limpador Multiuso",
-        price: "R$ 13,90",
-        image: "/lovable-uploads/galeria/R$ 13,90.jpeg",
-        category: "limpadores",
-        description: "Limpador para superfícies diversas"
-      },
-      {
-        id: 5,
-        name: "Amaciante Premium",
-        price: "R$ 17,90",
-        image: "/lovable-uploads/galeria/R$ 17,90.jpeg",
-        category: "amaciantes",
-        description: "Amaciante com fragrância duradoura"
-      },
-      {
-        id: 6,
-        name: "Álcool Gel 70%",
-        price: "R$ 10,50",
-        image: "/lovable-uploads/galeria/R$ 10,50.jpeg",
-        category: "higiene",
-        description: "Álcool gel para higienização das mãos"
-      }
-    ];
+  // Extract price from filename
+  const extractPrice = (filename: string): string => {
+    const priceMatch = filename.match(/R\$\s*[\d,]+(?:\.\d{2})?/);
+    return priceMatch ? priceMatch[0] : 'Consulte';
+  };
+
+  // Generate product name from filename
+  const generateProductName = (filename: string): string => {
+    const nameWithoutExtension = filename.replace(/\.(jpeg|jpg|png)$/i, '');
+    const nameWithoutPrice = nameWithoutExtension.replace(/R\$\s*[\d,]+(?:\.\d{2})?/g, '').trim();
     
-    setProducts(mockProducts);
-    setFilteredProducts(mockProducts);
+    if (nameWithoutPrice.length > 0) {
+      return `Produto de Limpeza - ${nameWithoutPrice}`;
+    }
+    
+    return 'Produto de Limpeza Profissional';
+  };
+
+  // Categorize products based on common patterns
+  const categorizeProduct = (filename: string): string => {
+    const name = filename.toLowerCase();
+    if (name.includes('detergente') || name.includes('5l') || name.includes('2l')) return 'detergentes';
+    if (name.includes('desinfetante')) return 'desinfetantes';
+    if (name.includes('sabão') || name.includes('sabao')) return 'saboes';
+    if (name.includes('limpador')) return 'limpadores';
+    if (name.includes('amaciante')) return 'amaciantes';
+    if (name.includes('álcool') || name.includes('alcool') || name.includes('gel')) return 'higiene';
+    return 'limpeza-geral';
+  };
+
+  useEffect(() => {
+    // All images from public/lovable-uploads/galeria
+    const galleryImages = [
+      "5L - R$27,90  2L - R$12,90 (cópia).jpeg",
+      "5L - R$27,90  2L - R$12,90.jpeg",
+      "69a48e2b-d0fd-4b71-a842-abe00864f7fd.png",
+      "90d99fc5-2fe3-4a3b-a15c-64bc0c7f8cef.png",
+      "R$    13,90.jpeg",
+      "R$   13,90 .jpeg",
+      "R$   13,90.jpeg",
+      "R$   15,90.jpeg",
+      "R$  10,50.jpeg",
+      "R$  13,50.jpeg",
+      "R$  13,90    .jpeg",
+      "R$  13,90  .jpeg",
+      "R$  13,90 .jpeg",
+      "R$  13,90.jpeg",
+      "R$  15,90.jpeg",
+      "R$  17,90.jpeg",
+      "R$  19,90.jpeg",
+      "R$  20,90.jpeg",
+      "R$  29,90 .png",
+      "R$  32,90.jpeg",
+      "R$ 10,50 .jpeg",
+      "R$ 10,50.jpeg",
+      "R$ 10,90.jpeg",
+      "R$ 13,50.jpeg",
+      "R$ 13,90    .jpeg",
+      "R$ 13,90   .jpeg",
+      "R$ 13,90  .jpeg",
+      "R$ 13,90 .jpeg",
+      "R$ 13,90.jpeg",
+      "R$ 14,90.jpeg",
+      "R$ 15,90   .jpeg",
+      "R$ 15,90  .jpeg",
+      "R$ 15,90 .jpeg",
+      "R$ 15,90.jpeg",
+      "R$ 16,50.jpeg",
+      "R$ 16,90.jpeg",
+      "R$ 17,90   .jpeg",
+      "R$ 17,90  .jpeg",
+      "R$ 17,90 .jpeg",
+      "R$ 17,90.jpeg",
+      "R$ 19,90 .jpeg",
+      "R$ 19,90.jpeg",
+      "R$ 19,90.png",
+      "R$ 20,90.jpeg",
+      "R$ 21,90.jpeg",
+      "R$ 22,50.jpeg",
+      "R$ 23,90.jpeg",
+      "R$ 24,50.jpeg",
+      "R$ 26,50.jpeg",
+      "R$ 29,90.jpeg",
+      "R$ 3,50.jpeg",
+      "R$ 32,50.jpeg",
+      "R$ 5,90.jpeg",
+      "R$ 6,80.jpeg",
+      "R$ 7,50.jpeg",
+      "R$ 9,90.jpeg",
+      "R$ 9.jpeg",
+      "R$10,50  .jpeg",
+      "R$10,50 .jpeg",
+      "R$10,50.jpeg",
+      "R$10,50.png",
+      "R$10,90 .jpeg",
+      "R$10,90.jpeg",
+      "R$11,90.jpeg",
+      "R$12,90 .jpeg",
+      "R$12,90.jpeg",
+      "R$13,50.jpeg",
+      "R$13,90    .jpeg",
+      "R$13,90   .jpeg",
+      "R$13,90  .jpeg",
+      "R$13,90 .jpeg",
+      "R$13,90.jpeg",
+      "R$14,50.jpeg",
+      "R$14,50.png",
+      "R$14,90  .jpeg",
+      "R$14,90 .jpeg",
+      "R$14,90.jpeg",
+      "R$15,90  .png",
+      "R$15,90 .jpeg",
+      "R$15,90.jpeg",
+      "R$16,50.jpeg",
+      "R$16,90.jpeg",
+      "R$16,90.png",
+      "R$17,50.jpeg",
+      "R$17,50.png",
+      "R$18,90 .jpeg",
+      "R$18,90.jpeg",
+      "R$19,90   .jpeg",
+      "R$19,90  .jpeg",
+      "R$19,90.jpeg",
+      "R$19,90.png",
+      "R$20,90.jpeg",
+      "R$21,90  .jpeg",
+      "R$21,90 .jpeg",
+      "R$21,90.jpeg",
+      "R$22,50  .jpeg",
+      "R$22,50 .jpeg",
+      "R$22,50.jpeg",
+      "R$23,50.jpeg",
+      "R$24,50 .jpeg",
+      "R$24,50.jpeg",
+      "R$25,90.jpeg",
+      "R$26,50.jpeg",
+      "R$26,90.png",
+      "R$27,90 .jpeg",
+      "R$27,90.jpeg",
+      "R$28,50.jpeg",
+      "R$29,90 .jpeg",
+      "R$29,90 .png",
+      "R$29,90.jpeg",
+      "R$3,50.jpeg",
+      "R$3,90.jpeg",
+      "R$32,50 .jpeg",
+      "R$32,50.png",
+      "R$34,90.jpeg",
+      "R$35,0.jpeg",
+      "R$36,90.png",
+      "R$39,90  .jpeg",
+      "R$39,90  .png",
+      "R$39,90 .jpeg",
+      "R$39,90.jpeg",
+      "R$39,90.png",
+      "R$5,90.jpeg",
+      "R$6,80 .jpeg",
+      "R$6,80.jpeg",
+      "R$7,50.jpeg",
+      "R$7,50.png",
+      "R$8,50.jpeg",
+      "R$8,90 .jpeg",
+      "R$8,90.jpeg",
+      "dabf577d-abec-4c2f-aab4-f1a1c600dc29.png"
+    ];
+
+    const galleryProducts: Product[] = galleryImages.map((filename, index) => ({
+      id: index + 1,
+      name: generateProductName(filename),
+      price: extractPrice(filename),
+      image: `/lovable-uploads/galeria/${filename}`,
+      category: categorizeProduct(filename),
+      description: "Produto de limpeza profissional de alta qualidade"
+    }));
+    
+    setProducts(galleryProducts);
+    setFilteredProducts(galleryProducts);
   }, []);
 
   // Filter products based on search and category
@@ -83,7 +205,8 @@ const Produtos = () => {
 
     if (searchTerm) {
       filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.price.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -103,7 +226,8 @@ const Produtos = () => {
     { value: 'saboes', label: 'Sabões' },
     { value: 'limpadores', label: 'Limpadores' },
     { value: 'amaciantes', label: 'Amaciantes' },
-    { value: 'higiene', label: 'Higiene' }
+    { value: 'higiene', label: 'Higiene' },
+    { value: 'limpeza-geral', label: 'Limpeza Geral' }
   ];
 
   return (
@@ -193,6 +317,10 @@ const Produtos = () => {
                         alt={product.name}
                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                         loading="lazy"
+                        onError={(e) => {
+                          console.log(`Erro ao carregar imagem: ${product.image}`);
+                          e.currentTarget.src = '/placeholder.svg';
+                        }}
                       />
                       <div className="absolute top-3 right-3 bg-demoop-teal text-white px-2 py-1 rounded-full text-sm font-semibold">
                         {product.price}
