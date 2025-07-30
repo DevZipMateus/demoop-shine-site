@@ -59,7 +59,7 @@ const About = () => {
               muted
               playsInline
               className="rounded-lg shadow-lg w-full h-auto"
-              style={{ maxHeight: '400px', objectFit: 'cover' }}
+              style={{ maxHeight: '400px', objectFit: 'contain' }}
             >
               Seu navegador não suporta o elemento de vídeo.
             </video>
