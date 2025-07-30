@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -53,12 +52,12 @@ const Produtos = () => {
   };
 
   useEffect(() => {
-    // All images from public/lovable-uploads/galeria - INCLUDING ALL AVAILABLE IMAGES
+    // All images from public/lovable-uploads/galeria - EXCLUDING SPECIFIC IMAGES
     const galleryImages = [
-      "5L - R$27,90  2L - R$12,90  2L - R$12,90.jpeg",
+      // "5L - R$27,90  2L - R$12,90  2L - R$12,90.jpeg", // REMOVED
       "5L - R$27,90  2L - R$12,90 (cópia).jpeg",
-      "69a48e2b-d0fd-4b71-a842-abe00864f7fd.png",
-      "90d99fc5-2fe3-4a3b-a15c-64bc0c7f8cef.png",
+      // "69a48e2b-d0fd-4b71-a842-abe00864f7fd.png", // REMOVED
+      // "90d99fc5-2fe3-4a3b-a15c-64bc0c7f8cef.png", // REMOVED
       "R$    13,90.jpeg",
       "R$   13,90 .jpeg",
       "R$   13,90.jpeg",
@@ -187,7 +186,6 @@ const Produtos = () => {
       "R$8,90.jpeg"
     ];
 
-    // New product images from recent uploads
     const newProductImages = [
       {
         filename: "158dde15-63cc-4f68-9eac-35c3229acbd4.png",
@@ -240,7 +238,6 @@ const Produtos = () => {
       }
     ];
 
-    // Create products from gallery images
     const galleryProducts: Product[] = galleryImages.map((filename, index) => ({
       id: index + 1,
       name: generateProductName(filename),
@@ -250,7 +247,6 @@ const Produtos = () => {
       description: "Produto de limpeza profissional de alta qualidade"
     }));
 
-    // Create products from new images
     const newProducts: Product[] = newProductImages.map((item, index) => ({
       id: galleryProducts.length + index + 1,
       name: item.name,
@@ -260,14 +256,12 @@ const Produtos = () => {
       description: item.description
     }));
 
-    // Combine all products
     const allProducts = [...galleryProducts, ...newProducts];
     
     setProducts(allProducts);
     setFilteredProducts(allProducts);
   }, []);
 
-  // Filter products based on search and category
   useEffect(() => {
     let filtered = products;
 
