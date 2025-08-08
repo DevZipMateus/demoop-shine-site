@@ -22,9 +22,6 @@ const Produtos = () => {
     { id: 12, image: '/lovable-uploads/galeria/R$  13,90 .jpeg', price: 'R$ 13,90', name: 'Limpador Perfumado Marine 5L' },
     { id: 13, image: '/lovable-uploads/galeria/R$  13,90.jpeg', price: 'R$ 13,90', name: 'Aromatizante Ambiente Tutti Frutti 500ml' },
     { id: 14, image: '/lovable-uploads/galeria/R$  15,90.jpeg', price: 'R$ 15,90', name: 'Limpador Concentrado Coala 120ml Lavanda' },
-    { id: 15, image: '/lovable-uploads/galeria/R$  17,90.jpeg', price: 'R$ 17,90', name: 'Davi preto' },
-    { id: 16, image: '/lovable-uploads/galeria/R$  19,90.jpeg', price: 'R$ 19,90', name: 'Davi preto' },
-    { id: 17, image: '/lovable-uploads/galeria/R$  20,90.jpeg', price: 'R$ 20,90', name: 'Odorizador Ambiente Blocker 500ml' },
     { id: 18, image: '/lovable-uploads/galeria/R$  29,90   .jpeg', price: 'R$ 29,90', name: 'Rodo Limpa vidros com reservatório' },
     { id: 19, image: '/lovable-uploads/galeria/R$  29,90 .png', price: 'R$ 29,90', name: 'Lava Roupas Concentrado 3L' },
     { id: 20, image: '/lovable-uploads/galeria/R$  32,90.jpeg', price: 'R$ 32,90', name: 'Odorizador Ambiente e Tecido 260ml - Chá branco' },
@@ -45,11 +42,6 @@ const Produtos = () => {
     { id: 35, image: '/lovable-uploads/galeria/R$ 15,90.jpeg', price: 'R$ 15,90', name: 'Amaciante Roupas Conforto5L' },
     { id: 36, image: '/lovable-uploads/galeria/R$ 16,50.jpeg', price: 'R$ 16,50', name: 'Desinfetante Flores 5L' },
     { id: 37, image: '/lovable-uploads/galeria/R$ 16,90.jpeg', price: 'R$ 16,90', name: 'Multi Uso 5L' },
-    { id: 38, image: '/lovable-uploads/galeria/R$ 17,90   .jpeg', price: 'R$ 17,90', name: 'Davi preto' },
-    { id: 39, image: '/lovable-uploads/galeria/R$ 17,90  .jpeg', price: 'R$ 17,90', name: 'Davi preto' },
-    { id: 40, image: '/lovable-uploads/galeria/R$ 17,90 .jpeg', price: 'R$ 17,90', name: 'Davi preto' },
-    { id: 41, image: '/lovable-uploads/galeria/R$ 17,90.jpeg', price: 'R$ 17,90', name: 'Davi preto' },
-    { id: 42, image: '/lovable-uploads/galeria/R$ 19,90 .jpeg', price: 'R$ 19,90', name: 'Davi preto' },
     { id: 43, image: '/lovable-uploads/galeria/R$ 19,90.jpeg', price: 'R$ 19,90', name: 'Desengordurante DX30 1L' },
     { id: 44, image: '/lovable-uploads/galeria/R$ 19,90.png', price: 'R$ 19,90', name: 'Limpador com Álcool Pefumado 1L' },
     { id: 45, image: '/lovable-uploads/galeria/R$ 20,90.jpeg', price: 'R$ 20,90', name: 'Odorizador Cozinha Blocker 500ml' },
@@ -61,10 +53,8 @@ const Produtos = () => {
     { id: 51, image: '/lovable-uploads/galeria/R$ 29,90.jpeg', price: 'R$ 29,90', name: 'Vela aromática Canela 90g' },
     { id: 52, image: '/lovable-uploads/galeria/R$ 3,50.jpeg', price: 'R$ 3,50', name: 'Sachê Perfumado Amore' },
     { id: 53, image: '/lovable-uploads/galeria/R$ 32,50.jpeg', price: 'R$ 32,50', name: 'Limpador Álcool Perfumado Floral 5L' },
-    { id: 54, image: '/lovable-uploads/galeria/R$ 5,90.jpeg', price: 'R$ 5,90', name: 'Davi preto' },
     { id: 55, image: '/lovable-uploads/galeria/R$ 6,80.jpeg', price: 'R$ 6,80', name: 'Limpador Perfumado Amore 2L' },
     { id: 56, image: '/lovable-uploads/galeria/R$ 7,50.jpeg', price: 'R$ 7,50', name: 'Limpa Vidros 500ml' },
-    { id: 57, image: '/lovable-uploads/galeria/R$ 9,90.jpeg', price: 'R$ 9,90', name: 'Davi preto' },
     { id: 58, image: '/lovable-uploads/galeria/R$ 9.jpeg', price: 'R$ 9', name: 'Limpa Vidros 2L' },
     { id: 59, image: '/lovable-uploads/galeria/R$10,50  .jpeg', price: 'R$ 10,50', name: 'Detergente Perfumado Sensação 2L' },
     { id: 60, image: '/lovable-uploads/galeria/R$10,50 .jpeg', price: 'R$ 10,50', name: 'Desengraxante Limonax 500ml' },
@@ -144,6 +134,8 @@ const Produtos = () => {
     { id: 134, image: '/lovable-uploads/galeria/R$8,90.jpeg', price: 'R$ 8,90' }
   ];
 
+  const filteredProducts = products.filter(product => product.name !== 'Davi preto');
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -180,7 +172,7 @@ const Produtos = () => {
       {/* Products Grid */}
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <div className="aspect-square">
                 <img
