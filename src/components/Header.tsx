@@ -20,9 +20,9 @@ const Header = () => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    // Se estamos na página de produtos, navegar para a home primeiro
-    if (location.pathname === '/produtos') {
-      navigate('/', { replace: true });
+    // Se estamos na página de produtos, navegar para a empresa primeiro
+    if (location.pathname === '/') {
+      navigate('/empresa', { replace: true });
       // Aguardar um pouco para a página carregar e então fazer o scroll
       setTimeout(() => {
         const element = document.getElementById(sectionId);
@@ -31,7 +31,7 @@ const Header = () => {
         }
       }, 100);
     } else {
-      // Se já estamos na home, fazer scroll diretamente
+      // Se já estamos na empresa, fazer scroll diretamente
       const element = document.getElementById(sectionId);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
@@ -48,7 +48,7 @@ const Header = () => {
   const menuItems = [
     { id: 'inicio', label: 'Início', type: 'scroll' },
     { id: 'sobre', label: 'Sobre', type: 'scroll' },
-    { id: 'produtos', label: 'Produtos', type: 'link', href: '/produtos' },
+    { id: 'empresa', label: 'Empresa', type: 'link', href: '/empresa' },
     { id: 'servicos', label: 'Serviços', type: 'scroll' },
     { id: 'depoimentos', label: 'Depoimentos', type: 'scroll' },
     { id: 'localizacao', label: 'Localização', type: 'scroll' },

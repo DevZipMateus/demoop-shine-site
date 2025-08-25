@@ -1,10 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Search, Filter } from 'lucide-react';
 import Header from '@/components/Header';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 
 const Produtos = () => {
   useScrollToTop();
+
+  useEffect(() => {
+    // Set document title and meta tags for SEO (página principal)
+    document.title = 'Demoop - Produtos de Limpeza e Descartáveis | Morro da Fumaça - SC';
+    
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Demoop: 9 anos oferecendo os melhores produtos de limpeza nacionais e regionais em Morro da Fumaça. Qualidade, eficiência e tradição para empresas e pessoas físicas.');
+    }
+
+    // Add Open Graph tags
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute('content', 'Demoop - Produtos de Limpeza e Descartáveis | A limpeza que faz a diferença');
+    }
+
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    if (ogDescription) {
+      ogDescription.setAttribute('content', 'Demoop: 9 anos oferecendo os melhores produtos de limpeza nacionais e regionais em Morro da Fumaça. Qualidade, eficiência e tradição.');
+    }
+  }, []);
 
   // Lista de todas as imagens da galeria com seus preços extraídos dos nomes dos arquivos
   const products = [
