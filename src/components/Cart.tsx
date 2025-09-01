@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { X, ShoppingCart, Send, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -27,7 +26,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
     message += `📦 Total de itens: ${getTotalItems()}\n\n`;
     message += "Gostaria de confirmar este pedido e saber sobre disponibilidade e formas de pagamento.";
 
-    const whatsappUrl = `https://wa.me/5548999999999?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/5548999982838?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
