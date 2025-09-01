@@ -1,14 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Menu, X, ShoppingCart } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useCart } from '@/contexts/CartContext';
+import Cart from './Cart';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { getTotalItems } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,10 +23,8 @@ const Header = () => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    // Se estamos na página de produtos, navegar para a empresa primeiro
-    if (location.pathname === '/') {
-      navigate('/empresa', { replace: true });
-      // Aguardar um pouco para a página carregar e então fazer o scroll
+    if (location.pathname !== '/empresa') {
+      navigate('/empresa');
       setTimeout(() => {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -31,7 +32,6 @@ const Header = () => {
         }
       }, 100);
     } else {
-      // Se já estamos na empresa, fazer scroll diretamente
       const element = document.getElementById(sectionId);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
@@ -40,116 +40,148 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
-  const handleLogoClick = () => {
-    navigate('/');
+  const handleNavigation = (path: string) => {
+    navigate(path);
     setIsMenuOpen(false);
   };
 
-  const menuItems = [
-    { id: 'inicio', label: 'Início', type: 'scroll' },
-    { id: 'sobre', label: 'Sobre', type: 'scroll' },
-    { id: 'empresa', label: 'Empresa', type: 'link', href: '/empresa' },
-    { id: 'servicos', label: 'Serviços', type: 'scroll' },
-    { id: 'depoimentos', label: 'Depoimentos', type: 'scroll' },
-    { id: 'localizacao', label: 'Localização', type: 'scroll' },
-    { id: 'contato', label: 'Contato', type: 'scroll' }
-  ];
+  const totalItems = getTotalItems();
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full ${
-        isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-white/90'
-      }`}
-      role="banner"
-    >
-      <div className="container-responsive py-3 sm:py-4">
-        <div className="flex items-center justify-between w-full">
-          {/* Logo */}
-          <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer flex-shrink-0" onClick={handleLogoClick}>
-            <img 
-              src="/lovable-uploads/a921157f-49aa-4e04-92cd-d937582e909f.png" 
-              alt="Demoop - Excelência em Limpeza"
-              className="h-8 sm:h-10 md:h-12 w-auto"
-              loading="eager"
-            />
+    <>
+      <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        isScrolled ? 'bg-white shadow-lg' : 'bg-white/95 backdrop-blur-sm'
+      }`}>
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
+            <div 
+              className="flex items-center cursor-pointer" 
+              onClick={() => handleNavigation('/')}
+            >
+              <div className="w-12 h-12 bg-demoop-teal rounded-full flex items-center justify-center mr-3">
+                <span className="text-white font-bold text-xl">D</span>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-demoop-teal">Demoop</h1>
+                <p className="text-xs text-gray-600">Produtos de Limpeza</p>
+              </div>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex space-x-8">
+              <button 
+                onClick={() => handleNavigation('/')} 
+                className="text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+              >
+                Produtos
+              </button>
+              <button 
+                onClick={() => handleNavigation('/empresa')} 
+                className="text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+              >
+                Empresa
+              </button>
+              <button 
+                onClick={() => scrollToSection('sobre')} 
+                className="text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+              >
+                Sobre
+              </button>
+              <button 
+                onClick={() => scrollToSection('servicos')} 
+                className="text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+              >
+                Serviços
+              </button>
+              <button 
+                onClick={() => scrollToSection('depoimentos')} 
+                className="text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+              >
+                Depoimentos
+              </button>
+              <button 
+                onClick={() => scrollToSection('contato')} 
+                className="text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+              >
+                Contato
+              </button>
+            </nav>
+
+            {/* Cart and Mobile Menu Button */}
+            <div className="flex items-center space-x-4">
+              {/* Cart Button */}
+              <button
+                onClick={() => setIsCartOpen(true)}
+                className="relative p-2 text-gray-700 hover:text-demoop-teal transition-colors"
+              >
+                <ShoppingCart className="h-6 w-6" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-demoop-teal text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
+              </button>
+
+              {/* Mobile Menu Button */}
+              <button
+                className="lg:hidden p-2 text-gray-700 hover:text-demoop-teal transition-colors"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6" role="navigation">
-            {menuItems.map((item) => (
-              item.type === 'link' ? (
-                <Link
-                  key={item.id}
-                  to={item.href}
-                  className={`font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md px-2 py-1 text-sm xl:text-base whitespace-nowrap ${
-                    location.pathname === item.href 
-                      ? 'text-demoop-teal' 
-                      : 'text-gray-700 hover:text-demoop-teal'
-                  }`}
-                  aria-label={`Navegar para página ${item.label}`}
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <nav className="lg:hidden py-4 border-t border-gray-200">
+              <div className="flex flex-col space-y-4">
+                <button 
+                  onClick={() => handleNavigation('/')} 
+                  className="text-left text-gray-700 hover:text-demoop-teal transition-colors font-medium"
                 >
-                  {item.label}
-                </Link>
-              ) : (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className="text-gray-700 hover:text-demoop-teal font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md px-2 py-1 text-sm xl:text-base whitespace-nowrap"
-                  aria-label={`Navegar para seção ${item.label}`}
-                >
-                  {item.label}
+                  Produtos
                 </button>
-              )
-            ))}
-          </nav>
-
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Abrir menu de navegação"
-          >
-            {isMenuOpen ? <X className="h-4 w-4 sm:h-6 sm:w-6" /> : <Menu className="h-4 w-4 sm:h-6 sm:w-6" />}
-          </Button>
+                <button 
+                  onClick={() => handleNavigation('/empresa')} 
+                  className="text-left text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+                >
+                  Empresa
+                </button>
+                <button 
+                  onClick={() => scrollToSection('sobre')} 
+                  className="text-left text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+                >
+                  Sobre
+                </button>
+                <button 
+                  onClick={() => scrollToSection('servicos')} 
+                  className="text-left text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+                >
+                  Serviços
+                </button>
+                <button 
+                  onClick={() => scrollToSection('depoimentos')} 
+                  className="text-left text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+                >
+                  Depoimentos
+                </button>
+                <button 
+                  onClick={() => scrollToSection('contato')} 
+                  className="text-left text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+                >
+                  Contato
+                </button>
+              </div>
+            </nav>
+          )}
         </div>
+      </header>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <nav className="lg:hidden mt-4 py-4 border-t border-gray-200 w-full" role="navigation">
-            <div className="flex flex-col space-y-1">
-              {menuItems.map((item) => (
-                item.type === 'link' ? (
-                  <Link
-                    key={item.id}
-                    to={item.href}
-                    className={`block w-full text-left py-3 px-4 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md text-base ${
-                      location.pathname === item.href 
-                        ? 'text-demoop-teal bg-demoop-light-teal' 
-                        : 'text-gray-700 hover:text-demoop-teal hover:bg-demoop-light-teal'
-                    }`}
-                    aria-label={`Navegar para página ${item.label}`}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                ) : (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className="block w-full text-left py-3 px-4 text-gray-700 hover:text-demoop-teal hover:bg-demoop-light-teal transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-demoop-teal focus:ring-opacity-50 rounded-md text-base"
-                    aria-label={`Navegar para seção ${item.label}`}
-                  >
-                    {item.label}
-                  </button>
-                )
-              ))}
-            </div>
-          </nav>
-        )}
-      </div>
-    </header>
+      {/* Cart Modal */}
+      <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+    </>
   );
 };
 

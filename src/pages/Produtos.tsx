@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Search, Filter } from 'lucide-react';
 import Header from '@/components/Header';
+import QuantitySelector from '@/components/QuantitySelector';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 
 const Produtos = () => {
@@ -203,15 +204,25 @@ const Produtos = () => {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <div className="p-3">
+              <div className="p-4">
                 {product.name && (
                   <h3 className="text-sm font-medium text-gray-800 mb-2 line-clamp-2">
                     {product.name}
                   </h3>
                 )}
-                <p className="text-lg font-semibold text-demoop-teal text-center">
+                <p className="text-lg font-semibold text-demoop-teal text-center mb-3">
                   {product.price}
                 </p>
+                
+                {/* Quantity Selector and Add to Cart */}
+                <QuantitySelector 
+                  product={{
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image
+                  }}
+                />
               </div>
             </div>
           ))}
