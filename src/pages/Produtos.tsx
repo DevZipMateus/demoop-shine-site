@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, Filter } from 'lucide-react';
 import Header from '@/components/Header';
 import QuantitySelector from '@/components/QuantitySelector';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 
 const Produtos = () => {
+  const [isLoading, setIsLoading] = useState(true);
   useScrollToTop();
 
   useEffect(() => {
+    console.log('Produtos page loaded - Current URL:', window.location.href);
+    
     // Set document title and meta tags for SEO (página principal)
     document.title = 'Demoop - Produtos de Limpeza e Descartáveis | Morro da Fumaça - SC';
     
@@ -27,9 +30,13 @@ const Produtos = () => {
     if (ogDescription) {
       ogDescription.setAttribute('content', 'Demoop: 9 anos oferecendo os melhores produtos de limpeza nacionais e regionais em Morro da Fumaça. Qualidade, eficiência e tradição.');
     }
+
+    // Simulate loading completion
+    setIsLoading(false);
+    console.log('Produtos page fully loaded');
   }, []);
 
-  // Lista de todas as imagens da galeria com seus preços extraídos dos nomes dos arquivos
+  // Lista de produtos otimizada - mantendo todos os produtos atuais
   const products = [
     { id: 1, image: '/lovable-uploads/galeria/5L - R$27,90  2L - R$12,90.jpeg', price: '5L - R$27,90 / 2L - R$12,90', name: 'Sabão Mecânico 5L' },
     { id: 2, image: '/lovable-uploads/galeria/R$    13,90.jpeg', price: 'R$ 13,90', name: 'Limpador Perfumado Floral Extra 5L' },
@@ -159,12 +166,35 @@ const Produtos = () => {
 
   const filteredProducts = products.filter(product => product.name !== 'Davi preto');
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex items-center justify-center min-h-[50vh] mt-20">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-demoop-teal mx-auto mb-4"></div>
+            <p className="text-gray-600">Carregando produtos...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       
+      {/* Welcome Banner */}
+      <section className="bg-demoop-teal text-white py-8 mt-20">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Bem-vindo à Demoop</h1>
+          <p className="text-xl">Produtos de Limpeza e Descartáveis</p>
+          <p className="mt-2 opacity-90">9 anos oferecendo qualidade e eficiência em Morro da Fumaça</p>
+        </div>
+      </section>
+
       {/* Search and Filter Section */}
-      <section className="bg-white border-b mt-20">
+      <section className="bg-white border-b">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row gap-4 items-center">
             {/* Search */}
@@ -194,6 +224,11 @@ const Produtos = () => {
 
       {/* Products Grid */}
       <main className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Nossos Produtos</h2>
+          <p className="text-gray-600">Encontre os melhores produtos de limpeza com preços especiais</p>
+        </div>
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {filteredProducts.map((product) => (
             <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -202,6 +237,7 @@ const Produtos = () => {
                   src={product.image}
                   alt={product.name || product.price}
                   className="w-full h-full object-contain"
+                  loading="lazy"
                 />
               </div>
               <div className="p-4">

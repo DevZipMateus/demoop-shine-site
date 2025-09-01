@@ -1,6 +1,6 @@
 
 # Arquivo .htaccess para aplicação React (Demoop) - Hostinger
-# Configurações otimizadas para roteamento SPA
+# Configurações otimizadas para roteamento SPA - Versão 2.0
 
 # =====================================
 # Configuração de Reescrita de URL (SPA Routing)
@@ -11,6 +11,10 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteCond %{HTTP:X-Forwarded-Proto} !https
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Remove www se presente (opcional - descomente se necessário)
+# RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+# RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
 # Remove trailing slash (exceto para diretórios)
 RewriteCond %{REQUEST_FILENAME} !-d
@@ -23,8 +27,10 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !^/api/
 RewriteCond %{REQUEST_URI} !^/admin/
-RewriteCond %{REQUEST_URI} !\.(?:css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|pdf|zip|mp4|webm|mov)$
-RewriteRule ^.*$ /index.html [L]
+RewriteCond %{REQUEST_URI} !^/wp-admin/
+RewriteCond %{REQUEST_URI} !^/wp-content/
+RewriteCond %{REQUEST_URI} !\.(?:css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|pdf|zip|mp4|webm|mov|txt|xml|json)$
+RewriteRule ^.*$ /index.html [L,QSA]
 
 # =====================================
 # Configurações de Cache Otimizadas
@@ -42,6 +48,7 @@ RewriteRule ^.*$ /index.html [L]
     ExpiresByType image/gif "access plus 1 year"
     ExpiresByType image/svg+xml "access plus 1 year"
     ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/avif "access plus 1 year"
     ExpiresByType video/mp4 "access plus 1 month"
     ExpiresByType font/woff "access plus 1 year"
     ExpiresByType font/woff2 "access plus 1 year"
@@ -51,8 +58,9 @@ RewriteRule ^.*$ /index.html [L]
     # Cache curto para HTML (1 hora para permitir atualizações)
     ExpiresByType text/html "access plus 1 hour"
     
-    # Cache para manifestos
+    # Cache para manifestos e APIs
     ExpiresByType application/manifest+json "access plus 1 week"
+    ExpiresByType application/json "access plus 1 hour"
     ExpiresByType text/xml "access plus 1 week"
     ExpiresByType application/xml "access plus 1 week"
 </IfModule>
@@ -78,7 +86,7 @@ RewriteRule ^.*$ /index.html [L]
     
     # Não comprimir arquivos já comprimidos
     SetEnvIfNoCase Request_URI \
-        \.(?:gif|jpe?g|png|webp|mp4|zip|gz|rar|7z)$ no-gzip dont-vary
+        \.(?:gif|jpe?g|png|webp|avif|mp4|zip|gz|rar|7z|pdf)$ no-gzip dont-vary
 </IfModule>
 
 # =====================================
@@ -90,9 +98,10 @@ RewriteRule ^.*$ /index.html [L]
     Header always set X-Frame-Options SAMEORIGIN
     Header always set X-XSS-Protection "1; mode=block"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
     
-    # Content Security Policy ajustado para WhatsApp
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https: wss: ws:; media-src 'self' data: blob:; frame-src 'self' https://wa.me https://api.whatsapp.com;"
+    # Content Security Policy ajustado para WhatsApp e aplicação
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https: wss: ws:; media-src 'self' data: blob:; frame-src 'self' https://wa.me https://api.whatsapp.com https://web.whatsapp.com; object-src 'none'; base-uri 'self';"
     
     # Remove headers que podem expor informações do servidor
     Header unset Server
@@ -100,19 +109,29 @@ RewriteRule ^.*$ /index.html [L]
     Header unset X-Generator
     
     # Cache control específico por tipo de arquivo
-    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|mp4)$">
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|mp4|webp|avif)$">
         Header set Cache-Control "max-age=31536000, public, immutable"
         Header set Vary "Accept-Encoding"
     </FilesMatch>
     
     <FilesMatch "\.(html|htm)$">
         Header set Cache-Control "max-age=3600, public, must-revalidate"
+        Header unset ETag
     </FilesMatch>
     
-    # CORS para fontes
+    <FilesMatch "\.(json)$">
+        Header set Cache-Control "max-age=3600, public"
+    </FilesMatch>
+    
+    # CORS para fontes e recursos
     <FilesMatch "\.(ttf|otf|eot|woff|woff2)$">
         Header set Access-Control-Allow-Origin "*"
         Header set Access-Control-Allow-Methods "GET"
+    </FilesMatch>
+    
+    # Preload headers para recursos críticos
+    <FilesMatch "\.(css)$">
+        Header add Link "</assets/index.css>; rel=preload; as=style"
     </FilesMatch>
 </IfModule>
 
@@ -122,21 +141,26 @@ RewriteRule ^.*$ /index.html [L]
 <IfModule mod_mime.c>
     AddType application/javascript .js .mjs
     AddType text/css .css
-    AddType image/svg+xml .svg
+    AddType image/svg+xml .svg .svgz
+    AddType image/webp .webp
+    AddType image/avif .avif
     AddType application/font-woff .woff
     AddType application/font-woff2 .woff2
     AddType font/woff .woff
     AddType font/woff2 .woff2
     AddType application/manifest+json .webmanifest
+    AddType application/json .json
     AddType video/mp4 .mp4
     AddType video/webm .webm
-    AddType image/webp .webp
+    
+    # Encoding para SVG comprimido
+    AddEncoding gzip .svgz
 </IfModule>
 
 # =====================================
 # Proteção de Arquivos Sensíveis
 # =====================================
-<FilesMatch "(^\.htaccess|\.env|\.git|\.DS_Store|Thumbs\.db|package\.json|tsconfig\.json|\.map$)">
+<FilesMatch "(^\.htaccess|\.env|\.git|\.DS_Store|Thumbs\.db|package\.json|tsconfig\.json|\.map$|composer\.json|yarn\.lock|package-lock\.json)">
     Require all denied
 </FilesMatch>
 
@@ -145,15 +169,23 @@ RewriteRule ^.*$ /index.html [L]
     Require all denied
 </Files>
 
+<Files "vite.config.ts">
+    Require all denied
+</Files>
+
 # =====================================
 # Configurações Específicas do Hostinger
 # =====================================
-# Configurar página de erro 404 personalizada
-ErrorDocument 404 /index.html
+# Configurar páginas de erro personalizadas
+ErrorDocument 400 /index.html
+ErrorDocument 401 /index.html
 ErrorDocument 403 /index.html
+ErrorDocument 404 /index.html
 ErrorDocument 500 /index.html
+ErrorDocument 502 /index.html
+ErrorDocument 503 /index.html
 
-# Configurações específicas para arquivos XML
+# Configurações específicas para arquivos XML e robots
 <Files "sitemap.xml">
     Header set Content-Type "application/xml; charset=utf-8"
     Header set Cache-Control "max-age=86400, public"
@@ -176,13 +208,20 @@ FileETag None
 </IfModule>
 
 # Configurações de diretório
-Options -Indexes
+Options -Indexes +FollowSymLinks
 DirectoryIndex index.html index.htm
 
 # Configuração de encoding
 AddDefaultCharset UTF-8
 
-# Prevenção de hotlinking para imagens (opcional)
+# Prevenção de hotlinking para imagens (descomente se necessário)
 # RewriteCond %{HTTP_REFERER} !^$
 # RewriteCond %{HTTP_REFERER} !^https?://(www\.)?demoop\.com\.br [NC]
-# RewriteRule \.(jpg|jpeg|png|gif|webp)$ - [F]
+# RewriteCond %{HTTP_REFERER} !^https?://(www\.)?seu-dominio\.com [NC]
+# RewriteRule \.(jpg|jpeg|png|gif|webp|svg)$ - [F,L]
+
+# =====================================
+# Configurações Específicas de Debugging (Remover em Produção)
+# =====================================
+# LogLevel alert rewrite:trace3
+# Descomente a linha acima apenas para debug de rewrite rules
