@@ -47,6 +47,8 @@ const Header = () => {
 
   const totalItems = getTotalItems();
 
+  console.log('Header renderizado - Logo deve aparecer');
+
   return (
     <>
       <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
@@ -54,17 +56,17 @@ const Header = () => {
       }`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-20">
-            {/* Logo */}
+            {/* Logo - Melhorada */}
             <div 
-              className="flex items-center cursor-pointer" 
+              className="flex items-center cursor-pointer hover:opacity-80 transition-opacity" 
               onClick={() => handleNavigation('/')}
             >
-              <div className="w-12 h-12 bg-demoop-teal rounded-full flex items-center justify-center mr-3">
-                <span className="text-white font-bold text-xl">D</span>
+              <div className="w-12 h-12 bg-demoop-teal rounded-full flex items-center justify-center mr-3 shadow-md">
+                <span className="text-white font-bold text-xl font-poppins">D</span>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-demoop-teal">Demoop</h1>
-                <p className="text-xs text-gray-600">Produtos de Limpeza</p>
+              <div className="flex flex-col">
+                <h1 className="text-2xl font-bold text-demoop-teal font-poppins leading-tight">Demoop</h1>
+                <p className="text-xs text-gray-600 font-inter -mt-1">Produtos de Limpeza</p>
               </div>
             </div>
 
