@@ -45,7 +45,7 @@ const Header = () => {
 
   const handleNavigation = (path: string) => {
     console.log('Navegando para:', path);
-    navigate(path, { replace: true });
+    navigate(path);
     setIsMenuOpen(false);
   };
 
@@ -60,20 +60,18 @@ const Header = () => {
       }`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-20">
-            {/* Logo - Sempre visível */}
+            {/* Logo - Nova logo da Demoop */}
             <div 
               className="flex items-center cursor-pointer hover:opacity-80 transition-opacity" 
               onClick={() => handleNavigation('/')}
               role="button"
               tabIndex={0}
             >
-              <div className="w-12 h-12 bg-demoop-teal rounded-full flex items-center justify-center mr-3 shadow-md">
-                <span className="text-white font-bold text-xl font-poppins">D</span>
-              </div>
-              <div className="flex flex-col">
-                <h1 className="text-2xl font-bold text-demoop-teal font-poppins leading-tight">Demoop</h1>
-                <p className="text-xs text-gray-600 font-inter -mt-1">Produtos de Limpeza</p>
-              </div>
+              <img 
+                src="/lovable-uploads/671adb8f-93ad-45df-9ce0-a218c26de753.png" 
+                alt="Demoop - Produtos de Limpeza" 
+                className="h-14 w-auto"
+              />
             </div>
 
             {/* Desktop Navigation */}
