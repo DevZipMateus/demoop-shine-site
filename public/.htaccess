@@ -1,18 +1,18 @@
 
 # Arquivo .htaccess para aplicação React (Demoop) - Hostinger
-# Configurações otimizadas para roteamento SPA - Versão 2.0
+# Configurações otimizadas para SPA - Versão 3.0 (Corrigido)
 
 # =====================================
 # Configuração de Reescrita de URL (SPA Routing)
 # =====================================
 RewriteEngine On
 
-# Força o uso de HTTPS (se disponível no Hostinger)
+# Força HTTPS (se disponível no Hostinger)
 RewriteCond %{HTTPS} off
 RewriteCond %{HTTP:X-Forwarded-Proto} !https
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# Remove www se presente (opcional - descomente se necessário)
+# Remove www se presente (opcional)
 # RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
 # RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
@@ -21,24 +21,28 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} (.+)/$
 RewriteRule ^(.+)/$ /$1 [R=301,L]
 
-# Roteamento principal para Single Page Application
+# Roteamento principal para Single Page Application - OTIMIZADO PARA HOSTINGER
 # Permite que arquivos estáticos sejam servidos normalmente
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+# Exclui diretórios administrativos
 RewriteCond %{REQUEST_URI} !^/api/
 RewriteCond %{REQUEST_URI} !^/admin/
 RewriteCond %{REQUEST_URI} !^/wp-admin/
 RewriteCond %{REQUEST_URI} !^/wp-content/
-RewriteCond %{REQUEST_URI} !\.(?:css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|pdf|zip|mp4|webm|mov|txt|xml|json)$
+RewriteCond %{REQUEST_URI} !^/cpanel/
+RewriteCond %{REQUEST_URI} !^/webmail/
+# Exclui arquivos estáticos
+RewriteCond %{REQUEST_URI} !\.(?:css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|pdf|zip|mp4|webm|mov|txt|xml|json|map)$
 RewriteRule ^.*$ /index.html [L,QSA]
 
 # =====================================
-# Configurações de Cache Otimizadas
+# Configurações de Cache Hostinger
 # =====================================
 <IfModule mod_expires.c>
     ExpiresActive On
     
-    # Cache longo para arquivos estáticos (1 ano)
+    # Cache para arquivos estáticos (1 ano)
     ExpiresByType text/css "access plus 1 year"
     ExpiresByType application/javascript "access plus 1 year"
     ExpiresByType text/javascript "access plus 1 year"
@@ -49,27 +53,26 @@ RewriteRule ^.*$ /index.html [L,QSA]
     ExpiresByType image/svg+xml "access plus 1 year"
     ExpiresByType image/webp "access plus 1 year"
     ExpiresByType image/avif "access plus 1 year"
-    ExpiresByType video/mp4 "access plus 1 month"
     ExpiresByType font/woff "access plus 1 year"
     ExpiresByType font/woff2 "access plus 1 year"
     ExpiresByType application/font-woff "access plus 1 year"
     ExpiresByType application/font-woff2 "access plus 1 year"
     
-    # Cache curto para HTML (1 hora para permitir atualizações)
-    ExpiresByType text/html "access plus 1 hour"
+    # Cache para HTML (15 minutos para permitir atualizações rápidas)
+    ExpiresByType text/html "access plus 15 minutes"
     
-    # Cache para manifestos e APIs
-    ExpiresByType application/manifest+json "access plus 1 week"
+    # Cache para manifestos e arquivos de configuração
+    ExpiresByType application/manifest+json "access plus 1 day"
     ExpiresByType application/json "access plus 1 hour"
-    ExpiresByType text/xml "access plus 1 week"
-    ExpiresByType application/xml "access plus 1 week"
+    ExpiresByType text/xml "access plus 1 day"
+    ExpiresByType application/xml "access plus 1 day"
 </IfModule>
 
 # =====================================
-# Compressão GZIP Otimizada
+# Compressão GZIP para Hostinger
 # =====================================
 <IfModule mod_deflate.c>
-    # Comprimir todos os tipos de texto
+    # Comprimir arquivos de texto
     AddOutputFilterByType DEFLATE text/plain
     AddOutputFilterByType DEFLATE text/html
     AddOutputFilterByType DEFLATE text/xml
@@ -90,48 +93,36 @@ RewriteRule ^.*$ /index.html [L,QSA]
 </IfModule>
 
 # =====================================
-# Headers de Segurança e Performance
+# Headers de Segurança e Performance - Hostinger
 # =====================================
 <IfModule mod_headers.c>
-    # Headers de segurança
+    # Headers de segurança básicos
     Header always set X-Content-Type-Options nosniff
     Header always set X-Frame-Options SAMEORIGIN
     Header always set X-XSS-Protection "1; mode=block"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
     
-    # Content Security Policy ajustado para WhatsApp e aplicação
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https: wss: ws:; media-src 'self' data: blob:; frame-src 'self' https://wa.me https://api.whatsapp.com https://web.whatsapp.com; object-src 'none'; base-uri 'self';"
+    # CSP otimizado para WhatsApp e aplicação
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https: wss:; media-src 'self' data: blob:; frame-src 'self' https://wa.me https://api.whatsapp.com; object-src 'none';"
     
-    # Remove headers que podem expor informações do servidor
+    # Remove headers desnecessários
     Header unset Server
     Header unset X-Powered-By
-    Header unset X-Generator
     
-    # Cache control específico por tipo de arquivo
+    # Cache control por tipo de arquivo
     <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|mp4|webp|avif)$">
         Header set Cache-Control "max-age=31536000, public, immutable"
         Header set Vary "Accept-Encoding"
     </FilesMatch>
     
     <FilesMatch "\.(html|htm)$">
-        Header set Cache-Control "max-age=3600, public, must-revalidate"
+        Header set Cache-Control "max-age=900, public, must-revalidate"
         Header unset ETag
     </FilesMatch>
     
-    <FilesMatch "\.(json)$">
-        Header set Cache-Control "max-age=3600, public"
-    </FilesMatch>
-    
-    # CORS para fontes e recursos
+    # CORS para fontes
     <FilesMatch "\.(ttf|otf|eot|woff|woff2)$">
         Header set Access-Control-Allow-Origin "*"
-        Header set Access-Control-Allow-Methods "GET"
-    </FilesMatch>
-    
-    # Preload headers para recursos críticos
-    <FilesMatch "\.(css)$">
-        Header add Link "</assets/index.css>; rel=preload; as=style"
     </FilesMatch>
 </IfModule>
 
@@ -150,42 +141,41 @@ RewriteRule ^.*$ /index.html [L,QSA]
     AddType font/woff2 .woff2
     AddType application/manifest+json .webmanifest
     AddType application/json .json
-    AddType video/mp4 .mp4
-    AddType video/webm .webm
     
     # Encoding para SVG comprimido
     AddEncoding gzip .svgz
 </IfModule>
 
 # =====================================
-# Proteção de Arquivos Sensíveis
+# Proteção de Arquivos
 # =====================================
-<FilesMatch "(^\.htaccess|\.env|\.git|\.DS_Store|Thumbs\.db|package\.json|tsconfig\.json|\.map$|composer\.json|yarn\.lock|package-lock\.json)">
+<FilesMatch "(^\.htaccess|\.env|\.git|\.DS_Store|package\.json|tsconfig\.json|\.map$)">
     Require all denied
 </FilesMatch>
 
-# Bloquear acesso direto a arquivos de configuração
-<Files "*.config.js">
-    Require all denied
-</Files>
-
-<Files "vite.config.ts">
-    Require all denied
-</Files>
-
 # =====================================
-# Configurações Específicas do Hostinger
+# Páginas de Erro - Hostinger
 # =====================================
-# Configurar páginas de erro personalizadas
 ErrorDocument 400 /index.html
 ErrorDocument 401 /index.html
 ErrorDocument 403 /index.html
 ErrorDocument 404 /index.html
 ErrorDocument 500 /index.html
-ErrorDocument 502 /index.html
-ErrorDocument 503 /index.html
 
-# Configurações específicas para arquivos XML e robots
+# =====================================
+# Performance Hostinger
+# =====================================
+# Desabilitar ETags
+FileETag None
+
+# Configurações de diretório
+Options -Indexes +FollowSymLinks
+DirectoryIndex index.html
+
+# Encoding padrão
+AddDefaultCharset UTF-8
+
+# Configuração específica para arquivos XML
 <Files "sitemap.xml">
     Header set Content-Type "application/xml; charset=utf-8"
     Header set Cache-Control "max-age=86400, public"
@@ -195,33 +185,3 @@ ErrorDocument 503 /index.html
     Header set Content-Type "text/plain; charset=utf-8"
     Header set Cache-Control "max-age=86400, public"
 </Files>
-
-# =====================================
-# Performance e Otimizações Hostinger
-# =====================================
-# Desabilitar ETags para melhor cache
-FileETag None
-
-# Configurar Keep-Alive
-<IfModule mod_headers.c>
-    Header set Connection keep-alive
-</IfModule>
-
-# Configurações de diretório
-Options -Indexes +FollowSymLinks
-DirectoryIndex index.html index.htm
-
-# Configuração de encoding
-AddDefaultCharset UTF-8
-
-# Prevenção de hotlinking para imagens (descomente se necessário)
-# RewriteCond %{HTTP_REFERER} !^$
-# RewriteCond %{HTTP_REFERER} !^https?://(www\.)?demoop\.com\.br [NC]
-# RewriteCond %{HTTP_REFERER} !^https?://(www\.)?seu-dominio\.com [NC]
-# RewriteRule \.(jpg|jpeg|png|gif|webp|svg)$ - [F,L]
-
-# =====================================
-# Configurações Específicas de Debugging (Remover em Produção)
-# =====================================
-# LogLevel alert rewrite:trace3
-# Descomente a linha acima apenas para debug de rewrite rules

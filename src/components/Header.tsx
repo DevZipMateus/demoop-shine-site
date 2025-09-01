@@ -23,8 +23,11 @@ const Header = () => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
+    console.log('Navegando para seção:', sectionId, 'Rota atual:', location.pathname);
+    
     if (location.pathname !== '/empresa') {
-      navigate('/empresa');
+      console.log('Redirecionando para /empresa e depois para seção:', sectionId);
+      navigate('/empresa', { replace: true });
       setTimeout(() => {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -41,13 +44,14 @@ const Header = () => {
   };
 
   const handleNavigation = (path: string) => {
-    navigate(path);
+    console.log('Navegando para:', path);
+    navigate(path, { replace: true });
     setIsMenuOpen(false);
   };
 
   const totalItems = getTotalItems();
 
-  console.log('Header renderizado - Logo deve aparecer');
+  console.log('Header renderizado - Rota atual:', location.pathname);
 
   return (
     <>
@@ -56,10 +60,12 @@ const Header = () => {
       }`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-20">
-            {/* Logo - Melhorada */}
+            {/* Logo - Sempre visível */}
             <div 
               className="flex items-center cursor-pointer hover:opacity-80 transition-opacity" 
               onClick={() => handleNavigation('/')}
+              role="button"
+              tabIndex={0}
             >
               <div className="w-12 h-12 bg-demoop-teal rounded-full flex items-center justify-center mr-3 shadow-md">
                 <span className="text-white font-bold text-xl font-poppins">D</span>
@@ -74,13 +80,21 @@ const Header = () => {
             <nav className="hidden lg:flex space-x-8">
               <button 
                 onClick={() => handleNavigation('/')} 
-                className="text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+                className={`font-medium transition-colors ${
+                  location.pathname === '/' 
+                    ? 'text-demoop-teal font-semibold' 
+                    : 'text-gray-700 hover:text-demoop-teal'
+                }`}
               >
                 Produtos
               </button>
               <button 
                 onClick={() => handleNavigation('/empresa')} 
-                className="text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+                className={`font-medium transition-colors ${
+                  location.pathname === '/empresa' 
+                    ? 'text-demoop-teal font-semibold' 
+                    : 'text-gray-700 hover:text-demoop-teal'
+                }`}
               >
                 Empresa
               </button>
@@ -141,13 +155,21 @@ const Header = () => {
               <div className="flex flex-col space-y-4">
                 <button 
                   onClick={() => handleNavigation('/')} 
-                  className="text-left text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+                  className={`text-left font-medium transition-colors ${
+                    location.pathname === '/' 
+                      ? 'text-demoop-teal font-semibold' 
+                      : 'text-gray-700 hover:text-demoop-teal'
+                  }`}
                 >
                   Produtos
                 </button>
                 <button 
                   onClick={() => handleNavigation('/empresa')} 
-                  className="text-left text-gray-700 hover:text-demoop-teal transition-colors font-medium"
+                  className={`text-left font-medium transition-colors ${
+                    location.pathname === '/empresa' 
+                      ? 'text-demoop-teal font-semibold' 
+                      : 'text-gray-700 hover:text-demoop-teal'
+                  }`}
                 >
                   Empresa
                 </button>

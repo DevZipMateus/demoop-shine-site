@@ -9,9 +9,10 @@ const Produtos = () => {
   useScrollToTop();
 
   useEffect(() => {
-    console.log('Produtos page loaded - Current URL:', window.location.href);
+    console.log('Página Produtos carregada - URL:', window.location.href);
+    console.log('Path:', window.location.pathname);
     
-    // Set document title and meta tags for SEO (página principal)
+    // Set document title and meta tags (página principal)
     document.title = 'Demoop - Produtos de Limpeza e Descartáveis | Morro da Fumaça - SC';
     
     // Update meta description
@@ -32,11 +33,14 @@ const Produtos = () => {
     }
 
     // Simulate loading completion
-    setIsLoading(false);
-    console.log('Produtos page fully loaded');
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      console.log('Página Produtos totalmente carregada');
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, []);
 
-  // Lista de produtos otimizada - mantendo todos os produtos atuais
   const products = [
     { id: 1, image: '/lovable-uploads/galeria/5L - R$27,90  2L - R$12,90.jpeg', price: '5L - R$27,90 / 2L - R$12,90', name: 'Sabão Mecânico 5L' },
     { id: 2, image: '/lovable-uploads/galeria/R$    13,90.jpeg', price: 'R$ 13,90', name: 'Limpador Perfumado Floral Extra 5L' },
