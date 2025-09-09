@@ -279,7 +279,7 @@ const Produtos = () => {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+            <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
               <div className="aspect-square">
                 <img
                   src={product.image}
@@ -303,25 +303,29 @@ const Produtos = () => {
                   }}
                 />
               </div>
-              <div className="p-4">
-                {product.name && (
-                  <h3 className="text-sm font-medium text-gray-800 mb-2 line-clamp-2">
-                    {product.name}
-                  </h3>
-                )}
-                <p className="text-lg font-semibold text-demoop-teal text-center mb-3">
-                  {product.price}
-                </p>
+              <div className="p-4 flex flex-col flex-grow">
+                <div className="flex-grow">
+                  {product.name && (
+                    <h3 className="text-sm font-medium text-gray-800 mb-2 line-clamp-2">
+                      {product.name}
+                    </h3>
+                  )}
+                  <p className="text-lg font-semibold text-demoop-teal text-center mb-3">
+                    {product.price}
+                  </p>
+                </div>
                 
                 {/* Quantity Selector and Add to Cart */}
-                <QuantitySelector 
-                  product={{
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.image
-                  }}
-                />
+                <div className="mt-auto">
+                  <QuantitySelector 
+                    product={{
+                      id: product.id,
+                      name: product.name,
+                      price: product.price,
+                      image: product.image
+                    }}
+                  />
+                </div>
               </div>
             </div>
           ))}
